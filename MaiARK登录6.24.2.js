@@ -55,7 +55,7 @@ function checkMaiArk() {
 	      sendText("2s后开始配置...")
 	      sleep(1500)
 	   	  sendText("请输入您的MaiARK服务地址：\n(输入“q”随时退出会话。)")
-	   	  maiArk = input(50000)
+	   	  maiArk = input(60000)
 	   	  
 	   	  for (var i = 0; i < 2; i++) {
          //错误4次直接退出
@@ -69,7 +69,7 @@ function checkMaiArk() {
            return;   
             } else{
                  sendText("输入地址格式错误，请重新输入：")
-                 maiArk = input(50000)
+                 maiArk = input(60000)
           
         }
             
@@ -82,7 +82,7 @@ function checkMaiArk() {
 		}
       	
       sendText("MaiARK为您服务，请输入11位手机号：(输入“q”随时退出会话。)");
-	  var num = input(30000)
+	  var num = input(60000)
 	  main(num);
 }
 
@@ -104,7 +104,7 @@ function main(num) {
 	    }
         else{
           sendText("请输入正确的手机号：")
-          num = input(30000)
+          num = input(60000)
           	//默认等待20s,不够自己改
         }
         
@@ -129,13 +129,13 @@ function getcode(num) {
 	var result = request({
 			url: addr +"/getsms?mobile=" + num,
 			"dataType": "json",
-			"timeOut": 20000
+			"timeOut": 30000
 			  //获取验证码20s未响应则超时
 		})
 
     if (!result) {
         
-        sendText("获取验证码超时，请联系管理员QQ：66903202！")
+        sendText("获取验证码超时，请尝试重新登录，或检查MaiARK配置！")
         //如果这里登录时返回这个内容，请检查自己的MaiARK是否正常
         if (notify!= "false") {
         notifyMasters("用户："+user+"\n昵称："+GetUsername()+"\n来源渠道："+ImType()+"\n该用户获取验证码失败\n\n不想收到此通知？试试对我发送“set jd_cookie maiark_notify false”")   
@@ -159,7 +159,7 @@ function LoginJD(num,result) {
 	var guid = result.guid
 	var lsid = result.lsid
 	var i = 0
-	code = input(45000)
+	code = input(60000)
 	//等待验证码45s，不够自己改
 	while (!code.match(/^[0-9]{6}$/)) {
       i++
@@ -171,17 +171,17 @@ function LoginJD(num,result) {
          return;
       }
       if (!code || code == "q" || code == "Q") return sendText("已退出会话。")
-      if (code.match(/(.*)revoked_msg(.*)$/))  {code = input(30000)}
+      if (code.match(/(.*)revoked_msg(.*)$/))  {code = input(60000)}
       if (!code.match(/^[0-9]{6}$/)) {
         sendText("请输入正确格式的验证码：")
-        code = input(30000)
+        code = input(60000)
     }
 }
     
 	var result1 = request({
 		url: addr +"/verify?mobile="+num +"&gsalt=" + gsalt+"&guid="+guid+"&lsid="+lsid+"&smscode="+code,
 			"dataType": "json",
-			"timeOut": 15000
+			"timeOut": 25000
 		})
 		
 	while (!result1) {
@@ -203,7 +203,7 @@ function LoginJD(num,result) {
       if (i > 5) return sendText("输入错误次数过多，已退出。")
       if (result1.msg == "验证码输入错误") {
          sendText("验证码错误，请重新输入：")
-         code = input(30000)
+         code = input(60000)
          result1 = request({
 		 url: addr +"/verify?mobile="+num +"&gsalt=" + gsalt+"&guid="+guid+"&lsid="+lsid+"&smscode="+code,
 			"dataType": "json"
@@ -268,7 +268,7 @@ function postck(result1) {
       
      if (ImType() == "wx" ) {
         bucketSet('pinWX', pin, user)
-        sendText("上车成功。")
+        sendText("登录成功。查询发送查询")
      return;
       }
      if (ImType() == "wxmp" ) {
